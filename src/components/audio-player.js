@@ -45,12 +45,27 @@ const AudioPlayer = ({ src, transcript }) => {
     setMediaTime(audioRef.current.currentTime);
   };
 
+  const onScrubberChange = (event) => {
+    const newTime = event.target.value;
+    setMediaTime(newTime);
+    audioRef.current.currentTime = newTime;
+  };
+
   return (
     <>
       <div className="audio">
         <button onClick={togglePlaying}>{isPlaying ? "Pause" : "Play"}</button>
         <span className="elapsed">Elapsed Time: {formatTime(mediaTime)}</span>
         <span className="duration">Total Time: {formatTime(duration)}</span>
+        <label htmlFor="time-scrubber">scrubber</label>
+        <input
+          type="range"
+          id="time-scrubber"
+          value={mediaTime}
+          min={0}
+          max={duration}
+          onChange={onScrubberChange}
+        />
       </div>
       <audio
         ref={audioRef}
