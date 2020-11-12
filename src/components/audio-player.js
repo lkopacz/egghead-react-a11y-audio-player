@@ -11,18 +11,30 @@ const AudioPlayer = ({ src, transcript }) => {
   const audioRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
+  const [duration, setDuration] = useState(0);
 
   const togglePlaying = () => {
     setIsPlaying(!isPlaying);
     isPlaying ? audioRef.current.pause() : audioRef.current.play();
   };
 
+  const onLoadedMetadata = () => {
+    setDuration(audioRef.current.duration);
+  };
+
   return (
     <>
-      <div>
+      <div className="audio">
         <button onClick={togglePlaying}>{isPlaying ? "Pause" : "Play"}</button>
+        <span className="elapsed">Elapsed Time: 0</span>
+        <span className="duration">Total Time: {duration}</span>
       </div>
-      <audio ref={audioRef} src={src} controls />
+      <audio
+        ref={audioRef}
+        onLoadedMetadata={onLoadedMetadata}
+        src={src}
+        controls
+      />
       <div>{transcript}</div>
     </>
   );
