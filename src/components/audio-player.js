@@ -51,6 +51,20 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.currentTime = newTime;
   };
 
+  const onRewind = () => {
+    const { currentTime } = audioRef.current;
+    const newTime = Math.max(currentTime - 15, 0);
+    setMediaTime(newTime);
+    audioRef.current.currentTime = newTime;
+  };
+
+  const onFastForward = () => {
+    const { currentTime } = audioRef.current;
+    const newTime = Math.min(currentTime + 15, duration);
+    setMediaTime(newTime);
+    audioRef.current.currentTime = newTime;
+  };
+
   return (
     <>
       <div className="audio">
@@ -66,6 +80,8 @@ const AudioPlayer = ({ src, transcript }) => {
           max={duration}
           onChange={onScrubberChange}
         />
+        <button onClick={onRewind}>Rewind 15 seconds</button>
+        <button onClick={onFastForward}>Fast-Forward 15 seconds</button>
       </div>
       <audio
         ref={audioRef}
