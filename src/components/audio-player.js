@@ -71,6 +71,8 @@ const AudioPlayer = ({ src, transcript }) => {
         ref={audioRef}
         onLoadedMetadata={onLoadedMetadata}
         onTimeUpdate={onTimeUpdate}
+        onPlay={() => setIsPlaying(true)}
+        onPause={() => setIsPlaying(false)}
         src={src}
         controls
       />
