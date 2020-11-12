@@ -65,6 +65,12 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.currentTime = newTime;
   };
 
+  const rates = [0.75, 1, 1.5, 2];
+
+  const changeRate = (rate) => {
+    audioRef.current.playbackRate = rate;
+  };
+
   return (
     <>
       <div className="audio">
@@ -82,6 +88,9 @@ const AudioPlayer = ({ src, transcript }) => {
         />
         <button onClick={onRewind}>Rewind 15 seconds</button>
         <button onClick={onFastForward}>Fast-Forward 15 seconds</button>
+        {rates.map((rate, i) => (
+          <button onClick={() => changeRate(rate)}>{rate}x</button>
+        ))}
       </div>
       <audio
         ref={audioRef}
