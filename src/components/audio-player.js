@@ -8,27 +8,9 @@ import {
   FaUndoAlt,
 } from "react-icons/fa";
 
-import "./audio-player.css";
+import { formatTime, formatHumanReadTime } from "../helpers/formatTime";
 
 import "./audio-player.css";
-
-const formatTime = (time) => {
-  // Hours, minutes and seconds
-  const hrs = Math.floor(~~(time / 3600)); // eslint-disable-line
-  const mins = Math.floor(~~((time % 3600) / 60)); // eslint-disable-line
-  const secs = Math.floor(time % 60);
-
-  // Output like "1:01" or "4:03:59" or "123:03:59"
-  let ret = "";
-
-  if (hrs > 0) {
-    ret += `${hrs}:${mins < 10 ? "0" : ""}`;
-  }
-
-  ret += `${mins}:${secs < 10 ? "0" : ""}`;
-  ret += `${secs}`;
-  return ret;
-};
 
 const AudioPlayer = ({ src, transcript }) => {
   // Create a play button that toggles play and pause
@@ -53,6 +35,7 @@ const AudioPlayer = ({ src, transcript }) => {
 
   const onLoadedMetadata = () => {
     setDuration(audioRef.current.duration);
+    formatHumanReadTime(audioRef.current.duration);
   };
 
   const onTimeUpdate = () => {
@@ -69,6 +52,7 @@ const AudioPlayer = ({ src, transcript }) => {
     const { currentTime } = audioRef.current;
     const newTime = Math.max(currentTime - 15, 0);
     setMediaTime(newTime);
+    formatHumanReadTime(newTime);
     audioRef.current.currentTime = newTime;
   };
 
@@ -121,9 +105,24 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <span className="elapsed">Elapsed Time: {formatTime(mediaTime)}</span>
-        <span className="duration">Total Time: {formatTime(duration)}</span>
-        <label htmlFor="time-scrubber">scrubber</label>
+        <span className="audio__time-wrapper">
+          <span className="elapsed">
+            <span className="visually-hidden">
+              Elapsed Time: {formatHumanReadTime(mediaTime)}
+            </span>
+            <span aria-hidden="true">{formatTime(mediaTime)}</span>
+          </span>
+          <span aria-hidden="true">/</span>
+          <span className="duration">
+            <span className="visually-hidden">
+              Total Time: {formatHumanReadTime(duration)}
+            </span>
+            <span aria-hidden="true">{formatTime(duration)}</span>
+          </span>
+        </span>
+        <label htmlFor="time-scrubber" className="visually-hidden">
+          scrubber
+        </label>
         <input
           type="range"
           id="time-scrubber"
@@ -131,6 +130,7 @@ const AudioPlayer = ({ src, transcript }) => {
           min={0}
           max={duration}
           onChange={onScrubberChange}
+          aria-valuetext={formatHumanReadTime(mediaTime)}
         />
         <button
           className="audio__rewind-button"
@@ -164,7 +164,9 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <label htmlFor="volume-scrubber">Volume:</label>
+        <label htmlFor="volume-scrubber" className="visually-hidden">
+          Volume:
+        </label>
         <input
           type="range"
           id="volume-scrubber"
