@@ -31,6 +31,7 @@ const AudioPlayer = ({ src, transcript }) => {
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [mediaTime, setMediaTime] = useState(0);
+  const [isMuted, setIsMuted] = useState(false);
 
   const togglePlaying = () => {
     setIsPlaying(!isPlaying);
@@ -71,6 +72,11 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.playbackRate = rate;
   };
 
+  const toggleMute = () => {
+    setIsMuted(!isMuted);
+    audioRef.current.muted = !isMuted;
+  };
+
   return (
     <>
       <div className="audio">
@@ -91,6 +97,7 @@ const AudioPlayer = ({ src, transcript }) => {
         {rates.map((rate, i) => (
           <button onClick={() => changeRate(rate)}>{rate}x</button>
         ))}
+        <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
       </div>
       <audio
         ref={audioRef}
@@ -98,6 +105,7 @@ const AudioPlayer = ({ src, transcript }) => {
         onTimeUpdate={onTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
+        onMute={toggleMute}
         src={src}
         controls
       />
