@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import "./audio-player.css";
+
 const formatTime = (time) => {
   // Hours, minutes and seconds
   const hrs = Math.floor(~~(time / 3600)); // eslint-disable-line
