@@ -1,5 +1,7 @@
 import { useRef, useState } from "react";
 
+import "./audio-player.css";
+
 const formatTime = (time) => {
   // Hours, minutes and seconds
   const hrs = Math.floor(~~(time / 3600)); // eslint-disable-line
@@ -32,6 +34,7 @@ const AudioPlayer = ({ src, transcript }) => {
   const [duration, setDuration] = useState(0);
   const [mediaTime, setMediaTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
+  const [volume, setVolume] = useState(1);
 
   const togglePlaying = () => {
     setIsPlaying(!isPlaying);
@@ -78,11 +81,18 @@ const AudioPlayer = ({ src, transcript }) => {
   };
 
   const onVolumeChange = () => {
-    if (audioRef.current.muted) {
+    if (audioRef.current.muted || audioRef.current.volume === 0) {
       setIsMuted(true);
-    } else if (isMuted) {
+    } else if (!audioRef.current.muted) {
       setIsMuted(false);
+      setVolume(audioRef.current.volume);
     }
+  };
+
+  const onVolumeScrubberChange = (event) => {
+    const newVolume = Number(event.target.value);
+    setVolume(newVolume);
+    audioRef.current.volume = newVolume;
   };
 
   return (
@@ -106,6 +116,16 @@ const AudioPlayer = ({ src, transcript }) => {
           <button onClick={() => changeRate(rate)}>{rate}x</button>
         ))}
         <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
+        <label htmlFor="volume-scrubber">Volume:</label>
+        <input
+          type="range"
+          id="volume-scrubber"
+          value={isMuted ? 0 : volume}
+          min={0}
+          max={1}
+          step={0.1}
+          onChange={onVolumeScrubberChange}
+        />
       </div>
       <audio
         ref={audioRef}

@@ -1,0 +1,168 @@
+:root {
+  --marron: #640d23;
+  --off-white: #f3e9ea;
+  --vermillion: #c03711;
+  --peach: #fed8ce;
+}
+
+.audio {
+  display: inline-flex;
+  justify-content: space-evenly;
+  align-items: center;
+  border: 1px solid var(--marron);
+  border-radius: 10px;
+  padding: 0.5rem;
+}
+
+.audio__play-button,
+.audio__mute-button {
+  border: 0;
+  height: 1.25rem;
+  width: 1.25rem;
+  background: transparent;
+  color: var(--marron);
+  padding: 0;
+}
+
+.audio__play-button svg,
+.audio__mute-button svg {
+  width: 20px;
+  height: 20px;
+}
+
+.audio__time-wrapper {
+  color: var(--marron);
+  font-size: 0.875rem;
+}
+
+.audio__rewind-button,
+.audio__fast-forward-button {
+  border: 0;
+  height: 1.25rem;
+  background: transparent;
+  color: var(--marron);
+}
+
+.rewind--fifteen,
+.fast-forward--fifteen {
+  font-size: 0.8125rem;
+}
+
+.audio__time-wrapper {
+  width: 6rem;
+  text-align: center;
+  display: inline-block;
+}
+
+/* remember to do cross browser, this is only for firefox */
+.audio input[type="range"] {
+  -webkit-appearance: none;
+}
+
+/* .audio input[type="range"]:focus {
+  outline: none;
+} */
+
+.audio input[type="range"]::-webkit-slider-runnable-track {
+  -webkit-appearance: none;
+  height: 0.25rem;
+  border-radius: 0.75rem;
+  background: var(--vermillion);
+}
+
+.audio input[type="range"]::-moz-range-track {
+  -webkit-appearance: none;
+  height: 0.25rem;
+  border-radius: 0.75rem;
+  background: var(--vermillion);
+}
+
+.audio input[type="range"]::-ms-track {
+  -webkit-appearance: none;
+  height: 0.25rem;
+  border-radius: 0.75rem;
+  background: var(--vermillion);
+  color: transparent;
+  border: 0;
+}
+
+.audio input[type="range"]::-webkit-slider-thumb {
+  -webkit-appearance: none;
+  height: 1rem;
+  width: 0.5rem;
+  border: 1px solid black;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -0.375rem;
+}
+
+.audio input[type="range"]::-moz-range-thumb {
+  -webkit-appearance: none;
+  height: 1rem;
+  width: 0.5rem;
+  border: 1px solid black;
+  border-radius: 0.75rem;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+}
+
+.audio input[type="range"]::-ms-thumb {
+  height: 1rem;
+  width: 0.5rem;
+  border: 1px solid black;
+  background: #ffffff;
+  cursor: pointer;
+  margin-top: -14px;
+}
+
+input[type="range"]:focus {
+  outline: none;
+}
+
+input[type="range"]:focus::-webkit-slider-thumb {
+  box-shadow: 0px 0px 7px 3px var(--marron);
+}
+
+input[type="range"]:focus::-moz-range-thumb {
+  box-shadow: 0px 0px 7px 3px var(--marron);
+}
+
+input[type="range"]:focus::-ms-thumb {
+  box-shadow: 0px 0px 7px 3px var(--marron);
+}
+
+.audio__playback-wrapper {
+  position: relative;
+  display: inline-flex;
+  max-width: 50px;
+  flex-direction: column;
+}
+
+.audio__rates-wrapper {
+  display: none;
+  position: absolute;
+  top: 14px;
+}
+
+.audio__rates-wrapper.open {
+  display: flex;
+  flex-direction: column;
+}
+
+.audio__playback-toggle,
+.audio__rates-wrapper button {
+  display: inline-block;
+  border: none;
+  margin: 0;
+  padding: 0;
+  color: var(--marron);
+  font-size: 0.875rem;
+  line-height: 1;
+  background: transparent;
+  width: 2.5rem;
+}
+
+.audio__playback-toggle {
+}
