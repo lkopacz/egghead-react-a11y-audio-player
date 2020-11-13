@@ -1,4 +1,12 @@
 import { useRef, useState } from "react";
+import {
+  FaPlayCircle,
+  FaPauseCircle,
+  FaVolumeMute,
+  FaVolumeUp,
+} from "react-icons/fa";
+
+import "./audio-player.css";
 
 import "./audio-player.css";
 
@@ -98,7 +106,19 @@ const AudioPlayer = ({ src, transcript }) => {
   return (
     <>
       <div className="audio">
-        <button onClick={togglePlaying}>{isPlaying ? "Pause" : "Play"}</button>
+        <button className="audio__play-button" onClick={togglePlaying}>
+          {isPlaying ? (
+            <>
+              <span className="visually-hidden">Pause</span>
+              <FaPauseCircle aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              <span className="visually-hidden">Play</span>
+              <FaPlayCircle aria-hidden="true" />
+            </>
+          )}
+        </button>
         <span className="elapsed">Elapsed Time: {formatTime(mediaTime)}</span>
         <span className="duration">Total Time: {formatTime(duration)}</span>
         <label htmlFor="time-scrubber">scrubber</label>
@@ -115,7 +135,19 @@ const AudioPlayer = ({ src, transcript }) => {
         {rates.map((rate, i) => (
           <button onClick={() => changeRate(rate)}>{rate}x</button>
         ))}
-        <button onClick={toggleMute}>{isMuted ? "Unmute" : "Mute"}</button>
+        <button className="audio__mute-button" onClick={toggleMute}>
+          {isMuted ? (
+            <>
+              <span className="visually-hidden">Unmute</span>
+              <FaVolumeMute aria-hidden="true" />
+            </>
+          ) : (
+            <>
+              <span className="visually-hidden">Mute</span>
+              <FaVolumeUp aria-hidden="true" />
+            </>
+          )}
+        </button>
         <label htmlFor="volume-scrubber">Volume:</label>
         <input
           type="range"
@@ -135,7 +167,6 @@ const AudioPlayer = ({ src, transcript }) => {
         onPause={() => setIsPlaying(false)}
         onVolumeChange={onVolumeChange}
         src={src}
-        controls
       />
       <div>{transcript}</div>
     </>

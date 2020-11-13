@@ -54,14 +54,9 @@
   display: inline-block;
 }
 
-/* remember to do cross browser, this is only for firefox */
 .audio input[type="range"] {
   -webkit-appearance: none;
 }
-
-/* .audio input[type="range"]:focus {
-  outline: none;
-} */
 
 .audio input[type="range"]::-webkit-slider-runnable-track {
   -webkit-appearance: none;
@@ -162,7 +157,4 @@ input[type="range"]:focus::-ms-thumb {
   line-height: 1;
   background: transparent;
   width: 2.5rem;
-}
-
-.audio__playback-toggle {
 }
