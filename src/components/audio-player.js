@@ -4,6 +4,8 @@ import {
   FaPauseCircle,
   FaVolumeMute,
   FaVolumeUp,
+  FaRedoAlt,
+  FaUndoAlt,
 } from "react-icons/fa";
 
 import "./audio-player.css";
@@ -130,8 +132,22 @@ const AudioPlayer = ({ src, transcript }) => {
           max={duration}
           onChange={onScrubberChange}
         />
-        <button onClick={onRewind}>Rewind 15 seconds</button>
-        <button onClick={onFastForward}>Fast-Forward 15 seconds</button>
+        <button
+          className="audio__rewind-button"
+          aria-label="Rewind 15 seconds"
+          onClick={onRewind}
+        >
+          <FaUndoAlt />
+          <span className="rewind--fifteen">15s</span>
+        </button>
+        <button
+          className="audio__fast-forward-button"
+          aria-label="Fast-Forward 15 seconds"
+          onClick={onFastForward}
+        >
+          <FaRedoAlt />
+          <span className="fast-forward--fifteen">15s</span>
+        </button>
         {rates.map((rate, i) => (
           <button onClick={() => changeRate(rate)}>{rate}x</button>
         ))}

@@ -158,3 +158,16 @@ input[type="range"]:focus::-ms-thumb {
   background: transparent;
   width: 2.5rem;
 }
+
+.audio__rewind-button,
+.audio__fast-forward-button {
+  border: 0;
+  font-size: 1rem;
+  background: transparent;
+  color: var(--marron);
+}
+
+.rewind--fifteen,
+.fast-forward--fifteen {
+  font-size: 0.8125rem;
+}
