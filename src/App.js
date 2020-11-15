@@ -1,4 +1,4 @@
-import AudioPlayer from "./components/audio-player";
+import AudioPlayer from "./components/audio-player/audio-player";
 
 import "./App.css";
 

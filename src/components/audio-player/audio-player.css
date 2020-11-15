@@ -35,7 +35,6 @@
   font-size: 0.875rem;
 }
 
-<<<<<<< HEAD
 .audio__rewind-button,
 .audio__fast-forward-button {
   border: 0;
@@ -168,21 +167,6 @@ input[type="range"]:focus::-ms-thumb {
   color: var(--marron);
 }
 
-=======
-.audio__time-wrapper {
-  color: var(--marron);
-  font-size: 0.875rem;
-}
-
-.audio__rewind-button,
-.audio__fast-forward-button {
-  border: 0;
-  font-size: 1rem;
-  background: transparent;
-  color: var(--marron);
-}
-
->>>>>>> b59032a... Styling and formatting human readable time.
 .rewind--fifteen,
 .fast-forward--fifteen {
   font-size: 0.8125rem;

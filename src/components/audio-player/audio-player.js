@@ -7,8 +7,9 @@ import {
   FaRedoAlt,
   FaUndoAlt,
 } from "react-icons/fa";
+import DropdownMenu from "../dropdown-menu/dropdown-menu";
 
-import { formatTime, formatHumanReadTime } from "../helpers/formatTime";
+import { formatTime, formatHumanReadTime } from "../../helpers/formatTime";
 
 import "./audio-player.css";
 
@@ -21,12 +22,15 @@ const AudioPlayer = ({ src, transcript }) => {
   // volume slider
   // mute toggle
   const audioRef = useRef(null);
+  // const ratesWrapperRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
   const [mediaTime, setMediaTime] = useState(0);
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
+  const [playbackRate, setPlaybackRate] = useState(1);
+  // "audio__playback-toggle"
 
   const togglePlaying = () => {
     setIsPlaying(!isPlaying);
@@ -63,9 +67,17 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.currentTime = newTime;
   };
 
+  const rateButton = (
+    <>
+      <span className="visually-hidden">Playback Rate</span>
+      <span>{playbackRate}x</span>
+    </>
+  );
+
   const rates = [0.75, 1, 1.5, 2];
 
   const changeRate = (rate) => {
+    setPlaybackRate(rate);
     audioRef.current.playbackRate = rate;
   };
 
@@ -148,9 +160,18 @@ const AudioPlayer = ({ src, transcript }) => {
           <FaRedoAlt />
           <span className="fast-forward--fifteen">15s</span>
         </button>
-        {rates.map((rate, i) => (
-          <button onClick={() => changeRate(rate)}>{rate}x</button>
-        ))}
+        <DropdownMenu
+          className="audio__playback-wrapper"
+          buttonText={rateButton}
+          buttonClass="audio__playback-toggle"
+          menuClass="audio__rates-wrapper"
+        >
+          {rates
+            .filter((rate) => playbackRate !== rate)
+            .map((rate, i) => (
+              <button onClick={() => changeRate(rate)}>{rate}x</button>
+            ))}
+        </DropdownMenu>
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
             <>
