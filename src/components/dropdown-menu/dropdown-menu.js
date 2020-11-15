@@ -70,6 +70,11 @@ const DropdownMenu = ({
     }
   };
 
+  const clickListeners = () => {
+    setIsOpen(false);
+    buttonToggleRef.current.focus();
+  };
+
   const toggleMenu = () => {
     const focusElement = isOpen
       ? buttonToggleRef.current
@@ -78,8 +83,10 @@ const DropdownMenu = ({
     focusableNodeList.forEach((item) => {
       if (isOpen) {
         item.removeEventListener("keydown", keyDownListeners);
+        item.removeEventListener("click", clickListeners);
       } else {
         item.addEventListener("keydown", keyDownListeners);
+        item.addEventListener("click", clickListeners);
       }
     });
 
