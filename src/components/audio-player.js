@@ -77,6 +77,14 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.muted = !isMuted;
   };
 
+  const onVolumeChange = () => {
+    if (audioRef.current.muted) {
+      setIsMuted(true);
+    } else if (isMuted) {
+      setIsMuted(false);
+    }
+  };
+
   return (
     <>
       <div className="audio">
@@ -107,7 +115,7 @@ const AudioPlayer = ({ src, transcript }) => {
         onTimeUpdate={onTimeUpdate}
         onPlay={() => setIsPlaying(true)}
         onPause={() => setIsPlaying(false)}
-        onMute={toggleMute}
+        onVolumeChange={onVolumeChange}
         src={src}
         controls
       />
