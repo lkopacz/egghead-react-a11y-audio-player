@@ -1,3 +1,4 @@
+import { useRef } from "react";
 import AudioPlayer from "./components/audio-player/audio-player";
 
 import "./App.css";
@@ -11,6 +12,7 @@ function App() {
       Transcript
     </a>
   );
+  const audioRef = useRef(null);
 
   return (
     <div className="App">
@@ -18,7 +20,14 @@ function App() {
         <h1>Accessible Audio Player</h1>
       </header>
       <main>
-        <AudioPlayer src={src} transcript={transcript} />
+        <AudioPlayer ref={audioRef} src={src} transcript={transcript} />
+        <button onClick={() => audioRef.current.play()}>Play</button>
+        <button onClick={() => (audioRef.current.currentTime = 11)}>
+          Jump to Computer Science Degree (0:11)
+        </button>
+        <button onClick={() => (audioRef.current.currentTime = 336)}>
+          Jump to Favorite Software Tools (5:36)
+        </button>
       </main>
     </div>
   );
