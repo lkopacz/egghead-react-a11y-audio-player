@@ -1,4 +1,4 @@
-import { useRef, useState, forwardRef } from "react";
+import { useState, forwardRef } from "react";
 import {
   FaPlayCircle,
   FaPauseCircle,
@@ -78,11 +78,11 @@ const AudioPlayer = forwardRef((props, ref) => {
   };
 
   const onVolumeChange = () => {
-    if (audioRef.current.muted || audioRef.current.volume === 0) {
+    if (ref.current.muted || ref.current.volume === 0) {
       setIsMuted(true);
-    } else if (!audioRef.current.muted) {
+    } else if (!ref.current.muted) {
       setIsMuted(false);
-      setVolume(audioRef.current.volume);
+      setVolume(ref.current.volume);
     }
   };
 
