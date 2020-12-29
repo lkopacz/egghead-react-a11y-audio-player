@@ -12,6 +12,7 @@ function App() {
       Transcript
     </a>
   );
+
   const audioRef = useRef(null);
 
   return (
@@ -28,6 +29,8 @@ function App() {
         <button onClick={() => (audioRef.current.currentTime = 336)}>
           Jump to Favorite Software Tools (5:36)
         </button>
+        <button onClick={() => (audioRef.current.muted = true)}>Mute</button>
+        <button onClick={() => (audioRef.current.muted = false)}>Unmute</button>
       </main>
     </div>
   );
