@@ -10,6 +10,8 @@ import "./audio-player.css";
 
 import "./audio-player.css";
 
+import "./audio-player.css";
+
 const formatTime = (time) => {
   // Hours, minutes and seconds
   const hrs = Math.floor(~~(time / 3600)); // eslint-disable-line
@@ -133,7 +135,9 @@ const AudioPlayer = ({ src, transcript }) => {
         <button onClick={onRewind}>Rewind 15 seconds</button>
         <button onClick={onFastForward}>Fast-Forward 15 seconds</button>
         {rates.map((rate, i) => (
-          <button onClick={() => changeRate(rate)}>{rate}x</button>
+          <button key={i} onClick={() => changeRate(rate)}>
+            {rate}x
+          </button>
         ))}
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
