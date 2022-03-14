@@ -89,7 +89,9 @@ const AudioPlayer = ({ src, transcript }) => {
         <button onClick={onRewind}>Rewind 15 seconds</button>
         <button onClick={onFastForward}>Fast-Forward 15 seconds</button>
         {rates.map((rate, i) => (
-          <button onClick={() => changeRate(rate)}>{rate}x</button>
+          <button key={i} onClick={() => changeRate(rate)}>
+            {rate}x
+          </button>
         ))}
       </div>
       <audio
