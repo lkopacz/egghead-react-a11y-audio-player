@@ -149,7 +149,9 @@ const AudioPlayer = ({ src, transcript }) => {
           <span className="fast-forward--fifteen">15s</span>
         </button>
         {rates.map((rate, i) => (
-          <button onClick={() => changeRate(rate)}>{rate}x</button>
+          <button key={i} onClick={() => changeRate(rate)}>
+            {rate}x
+          </button>
         ))}
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
