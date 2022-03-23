@@ -169,7 +169,9 @@ const AudioPlayer = ({ src, transcript }) => {
           {rates
             .filter((rate) => playbackRate !== rate)
             .map((rate, i) => (
-              <button onClick={() => changeRate(rate)}>{rate}x</button>
+              <button key={i} onClick={() => changeRate(rate)}>
+                {rate}x
+              </button>
             ))}
         </DropdownMenu>
         <button className="audio__mute-button" onClick={toggleMute}>
