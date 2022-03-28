@@ -35,7 +35,6 @@ const AudioPlayer = ({ src, transcript }) => {
 
   const onLoadedMetadata = () => {
     setDuration(audioRef.current.duration);
-    formatHumanReadTime(audioRef.current.duration);
   };
 
   const onTimeUpdate = () => {
@@ -52,7 +51,6 @@ const AudioPlayer = ({ src, transcript }) => {
     const { currentTime } = audioRef.current;
     const newTime = Math.max(currentTime - 15, 0);
     setMediaTime(newTime);
-    formatHumanReadTime(newTime);
     audioRef.current.currentTime = newTime;
   };
 
@@ -105,24 +103,9 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <span className="audio__time-wrapper">
-          <span className="elapsed">
-            <span className="visually-hidden">
-              Elapsed Time: {formatHumanReadTime(mediaTime)}
-            </span>
-            <span aria-hidden="true">{formatTime(mediaTime)}</span>
-          </span>
-          <span aria-hidden="true">/</span>
-          <span className="duration">
-            <span className="visually-hidden">
-              Total Time: {formatHumanReadTime(duration)}
-            </span>
-            <span aria-hidden="true">{formatTime(duration)}</span>
-          </span>
-        </span>
-        <label htmlFor="time-scrubber" className="visually-hidden">
-          scrubber
-        </label>
+        <span className="elapsed">Elapsed Time: {formatTime(mediaTime)}</span>
+        <span className="duration">Total Time: {formatTime(duration)}</span>
+        <label htmlFor="time-scrubber">scrubber</label>
         <input
           type="range"
           id="time-scrubber"
@@ -166,9 +149,7 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <label htmlFor="volume-scrubber" className="visually-hidden">
-          Volume:
-        </label>
+        <label htmlFor="volume-scrubber">Volume:</label>
         <input
           type="range"
           id="volume-scrubber"
