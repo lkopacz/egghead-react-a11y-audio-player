@@ -162,18 +162,12 @@ const AudioPlayer = ({ src, transcript }) => {
         </button>
         <DropdownMenu
           className="audio__playback-wrapper"
-          buttonText={rateButton}
+          defaultOption={1}
           buttonClass="audio__playback-toggle"
-          menuClass="audio__rates-wrapper"
-        >
-          {rates
-            .filter((rate) => playbackRate !== rate)
-            .map((rate, i) => (
-              <button key={i} onClick={() => changeRate(rate)}>
-                {rate}x
-              </button>
-            ))}
-        </DropdownMenu>
+          listboxClass="audio__rates-wrapper"
+          options={rates}
+          // onClick={}
+        />
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
             <>

@@ -136,18 +136,16 @@ input[type="range"]:focus::-ms-thumb {
 }
 
 .audio__rates-wrapper {
-  display: none;
+  display: flex;
+  flex-direction: column;
   position: absolute;
+  margin: 0;
+  padding: 0;
   top: 14px;
 }
 
-.audio__rates-wrapper.open {
-  display: flex;
-  flex-direction: column;
-}
-
 .audio__playback-toggle,
-.audio__rates-wrapper button {
+.audio__rates-wrapper li {
   display: inline-block;
   border: none;
   margin: 0;
@@ -157,6 +155,10 @@ input[type="range"]:focus::-ms-thumb {
   line-height: 1;
   background: transparent;
   width: 2.5rem;
+}
+
+.audio__rates-wrapper .focus-ring {
+  outline: 2px solid var(--vermillion);
 }
 
 .audio__rewind-button,

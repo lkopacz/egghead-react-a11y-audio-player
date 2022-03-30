@@ -1,112 +1,116 @@
-import { useState, useRef, useEffect } from "react";
+import { useState } from "react";
 
 const DropdownMenu = ({
   buttonClass,
-  buttonText,
-  menuClass,
+  defaultOption,
+  listboxClass,
   className,
-  children,
+  options,
 }) => {
-  const buttonToggleRef = useRef(null);
-  const dropdownWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [focusableNodeList, setFocusableNodeList] = useState(null);
-  const [firstFocusable, setFirstFocusable] = useState(null);
-  const [lastFocusable, setLastFocusable] = useState(null);
+  const [selectedOption, setSelectedOption] = useState(defaultOption);
+  const [activeDescendant, setActiveDescendant] = useState(
+    options.findIndex((option) => option === defaultOption)
+  );
+
   const tabKey = "Tab";
   const downKey = "ArrowDown";
   const upKey = "ArrowUp";
   const escKey = "Escape";
+  const enterKey = "Enter";
+  const spaceKey = " ";
 
-  useEffect(() => {
-    const menuWrapper = dropdownWrapperRef.current.querySelector(
-      `.${menuClass}`
-    );
-
-    const focusable = menuWrapper.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
-
-    focusable.forEach((item, index) => {
-      item.setAttribute("tabindex", "-1");
-      item.dataset.index = index;
-    });
-    setFocusableNodeList(focusable);
-    setFirstFocusable(focusable[0]);
-    setLastFocusable(focusable[focusable.length - 1]);
-  }, []);
-
-  const keyDownListeners = (e) => {
-    const index = Number(e.target.getAttribute("data-index"));
-
+  const handleKeyDown = (e) => {
     switch (e.key) {
       case tabKey:
-        setIsOpen(false);
+        if (isOpen) {
+          setSelectedOption(options[activeDescendant]);
+          setIsOpen(false);
+        }
+
+        break;
+      case enterKey:
+      case spaceKey:
+        if (isOpen) {
+          setSelectedOption(options[activeDescendant]);
+          setIsOpen(false);
+          e.preventDefault();
+        }
         break;
       case upKey:
-        if (e.target === firstFocusable) {
-          lastFocusable.focus();
+        if (activeDescendant === 0) {
+          setActiveDescendant(options.length - 1);
         } else {
-          dropdownWrapperRef.current
-            .querySelector(`[data-index="${index - 1}"]`)
-            .focus();
+          setActiveDescendant(activeDescendant - 1);
         }
         break;
       case downKey:
-        if (e.target === lastFocusable) {
-          firstFocusable.focus();
+        if (!isOpen) {
+          setIsOpen(true);
         } else {
-          dropdownWrapperRef.current
-            .querySelector(`[data-index="${index + 1}"]`)
-            .focus();
+          if (activeDescendant === options.length - 1) {
+            setActiveDescendant(0);
+          } else {
+            setActiveDescendant(activeDescendant + 1);
+          }
         }
         break;
       case escKey:
         setIsOpen(false);
-        buttonToggleRef.current.focus();
         break;
       default:
         break;
     }
   };
 
-  const clickListeners = () => {
-    setIsOpen(false);
-    buttonToggleRef.current.focus();
-  };
+  const handleClick = () => {};
 
-  const toggleMenu = () => {
-    const focusElement = isOpen
-      ? buttonToggleRef.current
-      : focusableNodeList[0];
-
-    focusableNodeList.forEach((item) => {
-      if (isOpen) {
-        item.removeEventListener("keydown", keyDownListeners);
-        item.removeEventListener("click", clickListeners);
-      } else {
-        item.addEventListener("keydown", keyDownListeners);
-        item.addEventListener("click", clickListeners);
-      }
-    });
-
+  const toggleListbox = () => {
     setIsOpen(!isOpen);
-    requestAnimationFrame(() => focusElement.focus());
   };
 
   return (
-    <div ref={dropdownWrapperRef} className={className}>
-      <button
-        ref={buttonToggleRef}
-        className={buttonClass}
-        onClick={toggleMenu}
-        aria-expanded={isOpen ? true : false}
-        aria-haspopup="true"
-      >
-        {buttonText}
-      </button>
-      <div className={isOpen ? `${menuClass} open` : menuClass}>{children}</div>
-    </div>
+    <>
+      <label className="visually-hidden" id="dropdown-label">
+        Select Playback rate
+      </label>
+      <div className={className}>
+        <button
+          role="combobox"
+          className={buttonClass}
+          aria-labelledby="dropdown-label"
+          id="combo-1"
+          onClick={toggleListbox}
+          onKeyDown={handleKeyDown}
+          aria-controls="listbox-1"
+          aria-expanded={isOpen ? true : false}
+          aria-haspopup="listbox"
+          aria-activedescendant={isOpen ? `option-${activeDescendant}` : ""}
+        >
+          {selectedOption}
+        </button>
+        <ul
+          role="listbox"
+          className={!isOpen ? "visually-hidden" : listboxClass}
+          id="listbox-1"
+          aria-labelledby="dropdown-label"
+          tabIndex={-1}
+        >
+          {options.map((item, i) => (
+            <li
+              role="option"
+              id={`option-${i}`}
+              key={i}
+              aria-selected={selectedOption === item ? true : false}
+              className={i === activeDescendant ? "focus-ring" : undefined}
+              onClick={handleClick}
+            >
+              {item}x
+            </li>
+          ))}
+        </ul>
+      </div>
+    </>
   );
 };
 
