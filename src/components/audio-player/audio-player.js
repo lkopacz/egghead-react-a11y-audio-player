@@ -30,7 +30,6 @@ const AudioPlayer = ({ src, transcript }) => {
   const [isMuted, setIsMuted] = useState(false);
   const [volume, setVolume] = useState(1);
   const [playbackRate, setPlaybackRate] = useState(1);
-  // "audio__playback-toggle"
 
   const togglePlaying = () => {
     setIsPlaying(!isPlaying);
@@ -165,15 +164,10 @@ const AudioPlayer = ({ src, transcript }) => {
           buttonText={rateButton}
           buttonClass="audio__playback-toggle"
           menuClass="audio__rates-wrapper"
-        >
-          {rates
-            .filter((rate) => playbackRate !== rate)
-            .map((rate, i) => (
-              <button key={i} onClick={() => changeRate(rate)}>
-                {rate}x
-              </button>
-            ))}
-        </DropdownMenu>
+          options={rates}
+          onOptionClick={changeRate}
+        />
+
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
             <>
