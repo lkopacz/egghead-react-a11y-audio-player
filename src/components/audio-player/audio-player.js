@@ -161,7 +161,7 @@ const AudioPlayer = ({ src, transcript }) => {
         </button>
         <DropdownMenu
           className="audio__playback-wrapper"
-          defaultOption={1}
+          buttonText={rateButton}
           buttonClass="audio__playback-toggle"
           menuClass="audio__rates-wrapper"
           options={rates}

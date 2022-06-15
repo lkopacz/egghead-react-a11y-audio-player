@@ -3,12 +3,14 @@ import uniqid from "uniqid";
 
 const DropdownMenu = ({
   buttonClass,
-  defaultOption,
-  listboxClass,
+  buttonText,
+  menuClass,
   className,
   options,
   onOptionClick,
 }) => {
+  const buttonToggleRef = useRef(null);
+  const dropdownWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
   const menuButtonId = uniqid("menu-");
   const dropdownId = uniqid("dropdown-");
@@ -17,8 +19,6 @@ const DropdownMenu = ({
   const downKey = "ArrowDown";
   const upKey = "ArrowUp";
   const escKey = "Escape";
-  const enterKey = "Enter";
-  const spaceKey = " ";
 
   const toggleMenu = () => {
     const focusElement = isOpen
@@ -40,19 +40,7 @@ const DropdownMenu = ({
       dropdownWrapperRef.current.querySelectorAll('[role="menuitem"]');
     switch (e.key) {
       case tabKey:
-        if (isOpen) {
-          setSelectedOption(options[activeDescendant]);
-          setIsOpen(false);
-        }
-
-        break;
-      case enterKey:
-      case spaceKey:
-        if (isOpen) {
-          setSelectedOption(options[activeDescendant]);
-          setIsOpen(false);
-          e.preventDefault();
-        }
+        setIsOpen(false);
         break;
       case upKey:
         if (i === 0) {
@@ -70,6 +58,7 @@ const DropdownMenu = ({
         break;
       case escKey:
         setIsOpen(false);
+        buttonToggleRef.current.focus();
         break;
       default:
         break;
