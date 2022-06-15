@@ -1,64 +1,59 @@
-import { useState, useRef, useEffect } from "react";
+import { useState, useRef } from "react";
+import uniqid from "uniqid";
 
 const DropdownMenu = ({
   buttonClass,
   buttonText,
   menuClass,
   className,
-  children,
+  options,
+  onOptionClick,
 }) => {
   const buttonToggleRef = useRef(null);
   const dropdownWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
-  const [focusableNodeList, setFocusableNodeList] = useState(null);
-  const [firstFocusable, setFirstFocusable] = useState(null);
-  const [lastFocusable, setLastFocusable] = useState(null);
+  const menuButtonId = uniqid("menu-");
+  const dropdownId = uniqid("dropdown-");
+
   const tabKey = "Tab";
   const downKey = "ArrowDown";
   const upKey = "ArrowUp";
   const escKey = "Escape";
 
-  useEffect(() => {
-    const menuWrapper = dropdownWrapperRef.current.querySelector(
-      `.${menuClass}`
-    );
+  const toggleMenu = () => {
+    const focusElement = isOpen
+      ? buttonToggleRef.current
+      : dropdownWrapperRef.current.querySelector('[role="menuitem"]');
 
-    const focusable = menuWrapper.querySelectorAll(
-      'button, [href], input, select, textarea, [tabindex]:not([tabindex="-1"])'
-    );
+    setIsOpen(!isOpen);
+    requestAnimationFrame(() => focusElement.focus());
+  };
 
-    focusable.forEach((item, index) => {
-      item.setAttribute("tabindex", "-1");
-      item.dataset.index = index;
-    });
-    setFocusableNodeList(focusable);
-    setFirstFocusable(focusable[0]);
-    setLastFocusable(focusable[focusable.length - 1]);
-  }, []);
+  const handleItemClick = (option) => {
+    setIsOpen(false);
+    onOptionClick(option);
+    buttonToggleRef.current.focus();
+  };
 
-  const keyDownListeners = (e) => {
-    const index = Number(e.target.getAttribute("data-index"));
-
+  const handleItemKeyDown = (e, i) => {
+    const optionsNodeList =
+      dropdownWrapperRef.current.querySelectorAll('[role="menuitem"]');
     switch (e.key) {
       case tabKey:
         setIsOpen(false);
         break;
       case upKey:
-        if (e.target === firstFocusable) {
-          lastFocusable.focus();
+        if (i === 0) {
+          optionsNodeList[options.length - 1].focus();
         } else {
-          dropdownWrapperRef.current
-            .querySelector(`[data-index="${index - 1}"]`)
-            .focus();
+          optionsNodeList[i - 1].focus();
         }
         break;
       case downKey:
-        if (e.target === lastFocusable) {
-          firstFocusable.focus();
+        if (i === options.length - 1) {
+          optionsNodeList[0].focus();
         } else {
-          dropdownWrapperRef.current
-            .querySelector(`[data-index="${index + 1}"]`)
-            .focus();
+          optionsNodeList[i + 1].focus();
         }
         break;
       case escKey:
@@ -70,42 +65,37 @@ const DropdownMenu = ({
     }
   };
 
-  const clickListeners = () => {
-    setIsOpen(false);
-    buttonToggleRef.current.focus();
-  };
-
-  const toggleMenu = () => {
-    const focusElement = isOpen
-      ? buttonToggleRef.current
-      : focusableNodeList[0];
-
-    focusableNodeList.forEach((item) => {
-      if (isOpen) {
-        item.removeEventListener("keydown", keyDownListeners);
-        item.removeEventListener("click", clickListeners);
-      } else {
-        item.addEventListener("keydown", keyDownListeners);
-        item.addEventListener("click", clickListeners);
-      }
-    });
-
-    setIsOpen(!isOpen);
-    requestAnimationFrame(() => focusElement.focus());
-  };
-
   return (
-    <div ref={dropdownWrapperRef} className={className}>
+    <div className={className}>
       <button
         ref={buttonToggleRef}
+        id={menuButtonId}
         className={buttonClass}
         onClick={toggleMenu}
         aria-expanded={isOpen ? true : false}
         aria-haspopup="true"
+        aria-controls={dropdownId}
       >
         {buttonText}
       </button>
-      <div className={isOpen ? `${menuClass} open` : menuClass}>{children}</div>
+      <div
+        ref={dropdownWrapperRef}
+        role="menu"
+        id={dropdownId}
+        aria-labelledby={menuButtonId}
+        className={isOpen ? `${menuClass} open` : menuClass}
+      >
+        {options.map((option, i) => (
+          <button
+            key={i}
+            role="menuitem"
+            onClick={() => handleItemClick(option)}
+            onKeyDown={(e) => handleItemKeyDown(e, i)}
+          >
+            {option}x
+          </button>
+        ))}
+      </div>
     </div>
   );
 };
