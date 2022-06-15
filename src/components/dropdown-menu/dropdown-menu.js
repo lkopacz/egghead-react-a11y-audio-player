@@ -1,4 +1,5 @@
-import { useState } from "react";
+import { useState, useRef } from "react";
+import uniqid from "uniqid";
 
 const DropdownMenu = ({
   buttonClass,
@@ -6,12 +7,11 @@ const DropdownMenu = ({
   listboxClass,
   className,
   options,
+  onOptionClick,
 }) => {
   const [isOpen, setIsOpen] = useState(false);
-  const [selectedOption, setSelectedOption] = useState(defaultOption);
-  const [activeDescendant, setActiveDescendant] = useState(
-    options.findIndex((option) => option === defaultOption)
-  );
+  const menuButtonId = uniqid("menu-");
+  const dropdownId = uniqid("dropdown-");
 
   const tabKey = "Tab";
   const downKey = "ArrowDown";
@@ -20,7 +20,24 @@ const DropdownMenu = ({
   const enterKey = "Enter";
   const spaceKey = " ";
 
-  const handleKeyDown = (e) => {
+  const toggleMenu = () => {
+    const focusElement = isOpen
+      ? buttonToggleRef.current
+      : dropdownWrapperRef.current.querySelector('[role="menuitem"]');
+
+    setIsOpen(!isOpen);
+    requestAnimationFrame(() => focusElement.focus());
+  };
+
+  const handleItemClick = (option) => {
+    setIsOpen(false);
+    onOptionClick(option);
+    buttonToggleRef.current.focus();
+  };
+
+  const handleItemKeyDown = (e, i) => {
+    const optionsNodeList =
+      dropdownWrapperRef.current.querySelectorAll('[role="menuitem"]');
     switch (e.key) {
       case tabKey:
         if (isOpen) {
@@ -38,21 +55,17 @@ const DropdownMenu = ({
         }
         break;
       case upKey:
-        if (activeDescendant === 0) {
-          setActiveDescendant(options.length - 1);
+        if (i === 0) {
+          optionsNodeList[options.length - 1].focus();
         } else {
-          setActiveDescendant(activeDescendant - 1);
+          optionsNodeList[i - 1].focus();
         }
         break;
       case downKey:
-        if (!isOpen) {
-          setIsOpen(true);
+        if (i === options.length - 1) {
+          optionsNodeList[0].focus();
         } else {
-          if (activeDescendant === options.length - 1) {
-            setActiveDescendant(0);
-          } else {
-            setActiveDescendant(activeDescendant + 1);
-          }
+          optionsNodeList[i + 1].focus();
         }
         break;
       case escKey:
@@ -63,54 +76,38 @@ const DropdownMenu = ({
     }
   };
 
-  const handleClick = () => {};
-
-  const toggleListbox = () => {
-    setIsOpen(!isOpen);
-  };
-
   return (
-    <>
-      <label className="visually-hidden" id="dropdown-label">
-        Select Playback rate
-      </label>
-      <div className={className}>
-        <button
-          role="combobox"
-          className={buttonClass}
-          aria-labelledby="dropdown-label"
-          id="combo-1"
-          onClick={toggleListbox}
-          onKeyDown={handleKeyDown}
-          aria-controls="listbox-1"
-          aria-expanded={isOpen ? true : false}
-          aria-haspopup="listbox"
-          aria-activedescendant={isOpen ? `option-${activeDescendant}` : ""}
-        >
-          {selectedOption}
-        </button>
-        <ul
-          role="listbox"
-          className={!isOpen ? "visually-hidden" : listboxClass}
-          id="listbox-1"
-          aria-labelledby="dropdown-label"
-          tabIndex={-1}
-        >
-          {options.map((item, i) => (
-            <li
-              role="option"
-              id={`option-${i}`}
-              key={i}
-              aria-selected={selectedOption === item ? true : false}
-              className={i === activeDescendant ? "focus-ring" : undefined}
-              onClick={handleClick}
-            >
-              {item}x
-            </li>
-          ))}
-        </ul>
+    <div className={className}>
+      <button
+        ref={buttonToggleRef}
+        id={menuButtonId}
+        className={buttonClass}
+        onClick={toggleMenu}
+        aria-expanded={isOpen ? true : false}
+        aria-haspopup="true"
+        aria-controls={dropdownId}
+      >
+        {buttonText}
+      </button>
+      <div
+        ref={dropdownWrapperRef}
+        role="menu"
+        id={dropdownId}
+        aria-labelledby={menuButtonId}
+        className={isOpen ? `${menuClass} open` : menuClass}
+      >
+        {options.map((option, i) => (
+          <button
+            key={i}
+            role="menuitem"
+            onClick={() => handleItemClick(option)}
+            onKeyDown={(e) => handleItemKeyDown(e, i)}
+          >
+            {option}x
+          </button>
+        ))}
       </div>
-    </>
+    </div>
   );
 };
 
