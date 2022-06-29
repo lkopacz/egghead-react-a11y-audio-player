@@ -2,13 +2,19 @@ import { useState, useRef } from "react";
 import uniqid from "uniqid";
 
 const DropdownMenu = ({
-  buttonClass,
   buttonText,
+  buttonClass,
   menuClass,
   className,
   options,
   onOptionClick,
 }) => {
+  // create a state for open/close menu
+  // need to be able to send focus to various places
+  // a. to button upon close
+  // b. to other menu items upon arrow keys
+  // c. navigate focus in menu through arrow keys NOT tab
+
   const buttonToggleRef = useRef(null);
   const dropdownWrapperRef = useRef(null);
   const [isOpen, setIsOpen] = useState(false);
@@ -23,34 +29,34 @@ const DropdownMenu = ({
   const toggleMenu = () => {
     const focusElement = isOpen
       ? buttonToggleRef.current
-      : dropdownWrapperRef.current.querySelector('[role="menuitem"]');
+      : dropdownWrapperRef.current.querySelector("button");
 
     setIsOpen(!isOpen);
     requestAnimationFrame(() => focusElement.focus());
   };
 
-  const handleItemClick = (option) => {
+  const handleOptionClick = (option) => {
     setIsOpen(false);
     onOptionClick(option);
-    buttonToggleRef.current.focus();
   };
 
-  const handleItemKeyDown = (e, i) => {
+  const handleOptionKeyDown = (e, i) => {
     const optionsNodeList =
-      dropdownWrapperRef.current.querySelectorAll('[role="menuitem"]');
+      dropdownWrapperRef.current.querySelectorAll("button");
+
     switch (e.key) {
       case tabKey:
         setIsOpen(false);
         break;
       case upKey:
         if (i === 0) {
-          optionsNodeList[options.length - 1].focus();
+          optionsNodeList[optionsNodeList.length - 1].focus();
         } else {
           optionsNodeList[i - 1].focus();
         }
         break;
       case downKey:
-        if (i === options.length - 1) {
+        if (i === optionsNodeList.length - 1) {
           optionsNodeList[0].focus();
         } else {
           optionsNodeList[i + 1].focus();
@@ -72,16 +78,16 @@ const DropdownMenu = ({
         id={menuButtonId}
         className={buttonClass}
         onClick={toggleMenu}
-        aria-expanded={isOpen ? true : false}
         aria-haspopup="true"
+        aria-expanded={isOpen}
         aria-controls={dropdownId}
       >
         {buttonText}
       </button>
       <div
         ref={dropdownWrapperRef}
-        role="menu"
         id={dropdownId}
+        role="menu"
         aria-labelledby={menuButtonId}
         className={isOpen ? `${menuClass} open` : menuClass}
       >
@@ -89,8 +95,9 @@ const DropdownMenu = ({
           <button
             key={i}
             role="menuitem"
-            onClick={() => handleItemClick(option)}
-            onKeyDown={(e) => handleItemKeyDown(e, i)}
+            tabIndex={-1}
+            onClick={() => handleOptionClick(option)}
+            onKeyDown={(e) => handleOptionKeyDown(e, i)}
           >
             {option}x
           </button>

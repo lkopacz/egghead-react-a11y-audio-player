@@ -7,8 +7,8 @@ import {
   FaRedoAlt,
   FaUndoAlt,
 } from "react-icons/fa";
-import DropdownMenu from "../dropdown-menu/dropdown-menu";
 
+import DropdownMenu from "../dropdown-menu/dropdown-menu";
 import { formatTime, formatHumanReadTime } from "../../helpers/formatTime";
 
 import "./audio-player.css";
@@ -22,7 +22,6 @@ const AudioPlayer = ({ src, transcript }) => {
   // volume slider
   // mute toggle
   const audioRef = useRef(null);
-  // const ratesWrapperRef = useRef(null);
 
   const [isPlaying, setIsPlaying] = useState(false);
   const [duration, setDuration] = useState(0);
@@ -38,7 +37,6 @@ const AudioPlayer = ({ src, transcript }) => {
 
   const onLoadedMetadata = () => {
     setDuration(audioRef.current.duration);
-    formatHumanReadTime(audioRef.current.duration);
   };
 
   const onTimeUpdate = () => {
@@ -55,7 +53,6 @@ const AudioPlayer = ({ src, transcript }) => {
     const { currentTime } = audioRef.current;
     const newTime = Math.max(currentTime - 15, 0);
     setMediaTime(newTime);
-    formatHumanReadTime(newTime);
     audioRef.current.currentTime = newTime;
   };
 
@@ -65,13 +62,6 @@ const AudioPlayer = ({ src, transcript }) => {
     setMediaTime(newTime);
     audioRef.current.currentTime = newTime;
   };
-
-  const rateButton = (
-    <>
-      <span className="visually-hidden">Playback Rate</span>
-      <span>{playbackRate}x</span>
-    </>
-  );
 
   const rates = [0.75, 1, 1.5, 2];
 
@@ -100,6 +90,13 @@ const AudioPlayer = ({ src, transcript }) => {
     audioRef.current.volume = newVolume;
   };
 
+  const buttonText = (
+    <>
+      <span className="visually-hidden">Playback Rate</span>
+      <span>{playbackRate}x</span>
+    </>
+  );
+
   return (
     <>
       <div className="audio">
@@ -116,24 +113,9 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <span className="audio__time-wrapper">
-          <span className="elapsed">
-            <span className="visually-hidden">
-              Elapsed Time: {formatHumanReadTime(mediaTime)}
-            </span>
-            <span aria-hidden="true">{formatTime(mediaTime)}</span>
-          </span>
-          <span aria-hidden="true">/</span>
-          <span className="duration">
-            <span className="visually-hidden">
-              Total Time: {formatHumanReadTime(duration)}
-            </span>
-            <span aria-hidden="true">{formatTime(duration)}</span>
-          </span>
-        </span>
-        <label htmlFor="time-scrubber" className="visually-hidden">
-          scrubber
-        </label>
+        <span className="elapsed">Elapsed Time: {formatTime(mediaTime)}</span>
+        <span className="duration">Total Time: {formatTime(duration)}</span>
+        <label htmlFor="time-scrubber">scrubber</label>
         <input
           type="range"
           id="time-scrubber"
@@ -161,13 +143,12 @@ const AudioPlayer = ({ src, transcript }) => {
         </button>
         <DropdownMenu
           className="audio__playback-wrapper"
-          buttonText={rateButton}
           buttonClass="audio__playback-toggle"
           menuClass="audio__rates-wrapper"
-          options={rates}
+          buttonText={buttonText}
           onOptionClick={changeRate}
+          options={rates}
         />
-
         <button className="audio__mute-button" onClick={toggleMute}>
           {isMuted ? (
             <>
@@ -181,9 +162,7 @@ const AudioPlayer = ({ src, transcript }) => {
             </>
           )}
         </button>
-        <label htmlFor="volume-scrubber" className="visually-hidden">
-          Volume:
-        </label>
+        <label htmlFor="volume-scrubber">Volume:</label>
         <input
           type="range"
           id="volume-scrubber"
